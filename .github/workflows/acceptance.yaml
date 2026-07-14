@@ -1,0 +1,18 @@
+name: Acceptance
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # This overlay renders platform files only (CI, Dockerfiles, k8s manifests) - there is no
+      # generated project to build or boot, so no language toolchain is required.
+      - uses: prova-rs/run-action@v1
+        with:
+          profile: ci
