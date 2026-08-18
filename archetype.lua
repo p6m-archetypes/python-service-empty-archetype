@@ -63,10 +63,18 @@ context:prompt_text("Build Command:", "build_command", {
     help    = "Installs the application into the image. Runs from the repo root.",
 })
 
+-- Asked OPTIONAL and derived after: a default computed from the application name cannot be
+-- known until that prompt is answered, so an interface probe resolves it against a
+-- placeholder and ships that to every client. The help states the derivation.
 context:prompt_text("Runtime Artifact:", "runtime_artifact", {
-    default = context:get("project-name"),
-    help    = "Console script the install puts on PATH, used as the container entrypoint.",
+    optional    = true,
+    placeholder = "billing-service",
+    help        = "Console script the install puts on PATH, used as the container entrypoint. "
+        .. "Leave blank to use the application name.",
 })
+if context:get("runtime_artifact") == nil or context:get("runtime_artifact") == "" then
+    context:set("runtime_artifact", context:get("project-name"))
+end
 
 -- Platform resources. These drive the platform manifests' resourceRequirements ONLY —
 -- the platform provisions them and injects connection secrets. No connection code is
