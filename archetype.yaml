@@ -5,7 +5,7 @@ frameworks: ["FastAPI", "uv"]
 tags: ["overlay", "empty", "retrofit", "ci", "platform", "python"]
 
 requires:
-  archetect: "3.0.0"
+  archetect: "3.4.3"
 
 templating:
   trim_blocks: true
