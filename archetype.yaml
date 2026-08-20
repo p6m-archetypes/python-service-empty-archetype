@@ -1,4 +1,4 @@
-description: "Python Service Platform Overlay"
+description: "Python Retrofit Overlay"
 authors: ["Jimmie Fulton <jimmie@ybor.ai>"]
 languages: ["Python"]
 frameworks: ["FastAPI", "uv"]

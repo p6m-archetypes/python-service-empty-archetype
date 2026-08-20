@@ -1,6 +1,6 @@
 # python-service-empty-archetype
 
-Python **Service Platform Overlay** — generates only the platform *servicing layer* for a
+Python **Retrofit Overlay** — generates only the platform *servicing layer* for a
 service and nothing else. Run it against an **existing** Python project to retrofit it with:
 
 - `.github/workflows/` — CI build + cut-tag (`python-ci`)
