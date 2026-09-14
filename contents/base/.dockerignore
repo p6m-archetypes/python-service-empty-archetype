@@ -4,7 +4,6 @@
 .git/
 .jj/
 .platform/
-*.md
 .venv/
 **/__pycache__/
 *.pyc
