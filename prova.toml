@@ -8,11 +8,14 @@ proofs = ["proofs"]
 # git cache for the composed prompt/CI/manifest libraries.
 jobs = 1
 
-# CI runs the same suite. This archetype is a platform overlay — it generates no project, so there
-# is nothing to build or boot and a runner needs no language toolchain (E7).
+# CI runs the same suite. This archetype is a platform overlay — it generates no project of its own,
+# so a runner needs no language toolchain (E7). It does need Docker: E8 (YP6M-4395) builds and boots
+# the rendered image over fixture apps, and `must_run` makes a runner without a daemon fail rather
+# than skip that half.
 [profiles.ci]
 jobs = 1
 format = "json"
+must_run = ["docker"]
 
 # `p6m` is the org standards suite. The overlay standards are E1–E7 in its docs/standards.md §2b.
 #
@@ -22,4 +25,6 @@ format = "json"
 # this pin rides a branch (silent again on a released tag); heed it (`prova --heed=p6m-pin`, or a
 # profile's `heed = ["p6m-pin"]`) when the window closes.
 [dependencies]
-p6m = { git = "https://github.com/p6m-archetypes/prova-p6m-standards", tag = "v1" }
+# YP6M-4395: rides the standards branch that adds E8 until it is released, then returns to tag v1
+# (the `p6m-pin` reminder is DUE meanwhile).
+p6m = { git = "https://github.com/p6m-archetypes/prova-p6m-standards", branch = "yp6m-4395/layout-agnostic-dockerfile" }

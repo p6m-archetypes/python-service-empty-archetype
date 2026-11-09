@@ -55,8 +55,10 @@ context:page({ title = "Container Build", key = "container_build",
                help = "How to build and run the EXISTING application. An overlay retrofits a repo "
                    .. "it did not generate, so it cannot assume the layout (E1b)." }, function(ctx)
     ctx:prompt_text("Build Command:", "build_command", {
-        default = "uv pip install --system --no-cache .",
-        help    = "Installs the application into the image. Runs from the repo root.",
+        default = "uv pip install --no-cache .",
+        help    = "Installs the application into the image's active virtual environment (/opt/venv). "
+            .. "Runs from the repo root. `pip install .`, `uv pip install .` and `uv sync --locked` "
+            .. "all install there; don't pass --system or --target.",
     })
 
     -- Asked OPTIONAL and derived after: a default computed from the application name cannot be
@@ -65,7 +67,7 @@ context:page({ title = "Container Build", key = "container_build",
     ctx:prompt_text("Runtime Artifact:", "runtime_artifact", {
         optional    = true,
         placeholder = "billing-service",
-        help        = "Console script the install puts on PATH, used as the container entrypoint. "
+        help        = "Console script the build installs into /opt/venv/bin, used as the container entrypoint. "
             .. "Leave blank to use the application name.",
     })
     if ctx:get("runtime_artifact") == nil or ctx:get("runtime_artifact") == "" then
