@@ -5,9 +5,9 @@
 --- archetype renders from — never from this file. That is the point: all six language overlays are
 --- held to one bar, and no one of them can quietly define its own.
 ---
---- Nothing here builds or boots. An overlay generates no project, so there is no code to compile
---- and no service to probe; the suite renders and inspects, and a runner needs prova and nothing
---- else (E7). What it holds instead are the seams a retrofit actually breaks on: writing project
+--- An overlay generates no project, so there is no code of its own to compile; the suite renders and
+--- inspects — and, since E8 (YP6M-4395), renders over small fixture apps from the standards package
+--- and builds and boots the production image, so a runner needs prova and Docker (E7). What it holds instead are the seams a retrofit actually breaks on: writing project
 --- scaffolding into someone else's repo, clobbering the application's own files, and CI/CD
 --- artifacts that disagree with each other about the image name.
 ---
@@ -58,9 +58,11 @@ for i, v in ipairs(VARIANTS) do
   }
 end
 
-for _, overlay in ipairs(specs) do
+local projects = {}
+for i, overlay in ipairs(specs) do
+  projects[i] = p6m.empty.render(overlay)
   prova.group(overlay.label, { tags = { "standards" } }, function(g)
-    p6m.empty.standards.rendering(g, p6m.empty.render(overlay), overlay)
+    p6m.empty.standards.rendering(g, projects[i], overlay)
   end)
 end
 
@@ -70,6 +72,11 @@ prova.group("python-empty: the archetype itself", { tags = { "standards" } }, fu
 
   -- S1c: the fleet's layout vocabulary, declared and pinned.
   p6m.standards.layout(g, "overlay")
+
+  -- E8 (YP6M-4395): the rendered image builds and boots over a default-shaped AND a divergent
+  -- Python app (a `uv sync --locked` console app, the YP6M-4395 retrofit shape) — not just the
+  -- text of the answers reaching the Dockerfile, which is all E1b could see.
+  p6m.empty.standards.container_build(g, projects[1], specs[1])
 end)
 
 -- E7's released-tag bar, as the `p6m-pin` reminder: DUE while the manifest pins `dev` (the
