@@ -35,7 +35,7 @@ RUN {{ build_command }}
 RUN entry="$(command -v '{{ runtime_artifact }}' || true)"; \
     case "$entry" in \
       /opt/venv/*|/app/*) ;; \
-      "") echo "p6m: runtime_artifact '{{ runtime_artifact }}' was not installed by build_command '{{ build_command }}'." >&2; \
+      "") echo "p6m: runtime_artifact '{{ runtime_artifact }}' was not installed by build_command." >&2; \
           echo "p6m: console scripts in /opt/venv/bin: $(ls /opt/venv/bin | grep -vE '^(python|pip|activate|Activate|deactivate)' | tr '\n' ' ')" >&2; \
           exit 1 ;; \
       *) echo "p6m: runtime_artifact '{{ runtime_artifact }}' resolved to $entry, outside /opt/venv. build_command must install into the active environment (drop --system / --target)." >&2; \
